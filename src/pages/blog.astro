@@ -1,0 +1,34 @@
+---
+import {  getCollection } from 'astro:content';
+import Layout from "../layouts/Layout.astro"
+import { format, isBefore } from "date-fns";
+
+
+const allBlogPosts = await getCollection("blog");
+allBlogPosts.sort((a, b) => {
+  return isBefore(b.data.date, a.data.date) ? -1 : 1;
+});
+---
+
+<Layout title="Wenjing's Blog">
+
+  <ul
+    class="mx-auto max-w-prose px-4 md:px-0 mt-12 prose prose-mrpickles a:underline bg-white"
+  >
+    {
+      allBlogPosts.map((b) => (
+        <li>
+          {format(b.data.date, "MMM do yyyy")}{" "}
+          <a
+            href={`/blog/${b.slug}`}
+            class="ml-2 underline decoration-2 underline-offset-2 decoration-mrpickles-accent"
+          >
+            {b.data.title}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  
+</Layout>
